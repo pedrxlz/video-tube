@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">VideoTube</string>
+    <string name="title_home">Destaques</string>
+    <string name="title_dashboard">Favoritos</string>
+    <string name="title_notifications">Perfil</string>
+    <string name="video_thumbnail">Video Thumbnail</string>
+</resources>
