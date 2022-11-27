@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "917641040095",
+    "project_id": "videotube-13ae4",
+    "storage_bucket": "videotube-13ae4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917641040095:android:791686e8b4c3ddb553996a",
+        "android_client_info": {
+          "package_name": "com.example.youtubeapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917641040095-3jpthp0vnbkt46pa810idhgdrpeb55af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiMq_Vfrrd8BXye_dyS0z4fxxOw7hUfn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917641040095-3jpthp0vnbkt46pa810idhgdrpeb55af.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
