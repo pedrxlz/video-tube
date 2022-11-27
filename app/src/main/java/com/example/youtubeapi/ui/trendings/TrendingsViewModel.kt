@@ -28,7 +28,7 @@ class TrendingsViewModel : ViewModel() {
 
     private fun getVideoList() {
         _isLoading.value = true
-        val client = ApiConfig.getService().getPlaylist("snippet", "PLEWxb4I8sM9IANpBRkCH-c7fL6sIAq-Ql")
+        val client = ApiConfig.getService().getPlaylist("snippet", "PLEWxb4I8sM9IANpBRkCH-c7fL6sIAq-Ql", "10")
         client.enqueue(object : Callback<VideoYtModel> {
             /**
              * Invoked for a received HTTP response.

@@ -17,7 +17,8 @@ interface ApiServices {
     @GET("playlistItems")
     fun getPlaylist(
         @Query("part") part: String,
-        @Query("playlistId") playlistId: String
+        @Query("playlistId") playlistId: String,
+        @Query("maxResults") maxResults: String
     ) : Call<VideoYtModel>
 
 }

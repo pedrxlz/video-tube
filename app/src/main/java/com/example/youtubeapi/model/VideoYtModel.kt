@@ -13,9 +13,12 @@ data class VideoYtModel(
 
 ) {
 
+
     data class VideoItem (
         @SerializedName("snippet")
         val snippetYt: SnippetYt
     )
+
+
 
 }

@@ -19,6 +19,16 @@ data class SnippetYt(
     val thumbnails: ThumbnailsYt,
 
     @SerializedName("position")
-    val country: Int?
+    val country: Int?,
 
-)
+    @SerializedName("resourceId")
+    val resourceId: VideoId
+
+
+
+) {
+    data class VideoId (
+        @SerializedName("videoId")
+        val videoId: String
+        )
+}
