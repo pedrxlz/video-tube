@@ -1,49 +1,60 @@
 package com.example.youtubeapi.adapter
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.youtubeapi.activities.PlayerActivity
 import com.example.youtubeapi.databinding.ItemVideoBinding
 import com.example.youtubeapi.diffutils.VideoDiffUtil
+import com.example.youtubeapi.model.FirebaseVideoYtModel
 import com.example.youtubeapi.model.VideoYtModel
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
-class VideoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    /**
-     * Called when RecyclerView needs a new [ViewHolder] of the given type to represent
-     * an item.
-     *
-     *
-     * This new ViewHolder should be constructed with a new View that can represent the items
-     * of the given type. You can either create a new View manually or inflate it from an XML
-     * layout file.
-     *
-     *
-     * The new ViewHolder will be used to display items of the adapter using
-     * [.onBindViewHolder]. Since it will be re-used to display
-     * different items in the data set, it is a good idea to cache references to sub views of
-     * the View to avoid unnecessary [View.findViewById] calls.
-     *
-     * @param parent The ViewGroup into which the new View will be added after it is bound to
-     * an adapter position.
-     * @param viewType The view type of the new View.
-     *
-     * @return A new ViewHolder that holds a View of the given view type.
-     * @see .getItemViewType
-     * @see .onBindViewHolder
-     */
+class VideoAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var oldItems = emptyList<VideoYtModel.VideoItem>()
 
+
     class VideoHolder(itemView: ItemVideoBinding) : RecyclerView.ViewHolder(itemView.root) {
         private val binding = itemView
+        private lateinit var database: DatabaseReference
+        private lateinit var firebaseAuth: FirebaseAuth
 
         fun setData(data: VideoYtModel.VideoItem) {
 
-            binding.root.setOnClickListener{
+            firebaseAuth = FirebaseAuth.getInstance()
+            binding.likeButton.setOnClickListener {
+                database = FirebaseDatabase.getInstance().getReference(firebaseAuth.uid.toString())
+                val video = FirebaseVideoYtModel(
+                    data.snippetYt.resourceId.videoId,
+                    data.snippetYt.title,
+                    data.snippetYt.description,
+                    data.snippetYt.publishedAt,
+                    data.snippetYt.thumbnails
+                )
+                database.child(data.snippetYt.resourceId.videoId).setValue(video).addOnSuccessListener {
+                    val colorValue = Color.parseColor("#0099FF")
+                    ImageViewCompat.setImageTintList(
+                        binding.likeButton,
+                        ColorStateList.valueOf(colorValue)
+                    );
+                }.addOnFailureListener {
+                    Snackbar.make(binding.root, "Falha ao curtir o vídeo", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+
+            }
+
+            binding.root.setOnClickListener {
                 val i = Intent(it.context, PlayerActivity::class.java)
                 i.putExtra("video_id", data.snippetYt.resourceId.videoId)
                 i.putExtra("video_title", data.snippetYt.title)
@@ -64,46 +75,20 @@ class VideoAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return VideoHolder(view)
     }
 
-    /**
-     * Called by RecyclerView to display the data at the specified position. This method should
-     * update the contents of the [ViewHolder.itemView] to reflect the item at the given
-     * position.
-     *
-     *
-     * Note that unlike [android.widget.ListView], RecyclerView will not call this method
-     * again if the position of the item changes in the data set unless the item itself is
-     * invalidated or the new position cannot be determined. For this reason, you should only
-     * use the `position` parameter while acquiring the related data item inside
-     * this method and should not keep a copy of it. If you need the position of an item later
-     * on (e.g. in a click listener), use [ViewHolder.getAdapterPosition] which will
-     * have the updated adapter position.
-     *
-     * Override [.onBindViewHolder] instead if Adapter can
-     * handle efficient partial bind.
-     *
-     * @param holder The ViewHolder which should be updated to represent the contents of the
-     * item at the given position in the data set.
-     * @param position The position of the item within the adapter's data set.
-     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as VideoHolder).setData(oldItems[position])
     }
 
-    /**
-     * Returns the total number of items in the data set held by the adapter.
-     *
-     * @return The total number of items in this adapter.
-     */
+
     override fun getItemCount(): Int {
         return oldItems.size
     }
 
-    fun setData(newList: List<VideoYtModel.VideoItem>){
+    fun setData(newList: List<VideoYtModel.VideoItem>) {
         val videoDiff = VideoDiffUtil(oldItems, newList)
         val diff = DiffUtil.calculateDiff(videoDiff)
         oldItems = newList
         diff.dispatchUpdatesTo(this)
-
     }
 
 }
